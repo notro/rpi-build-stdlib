@@ -1,4 +1,3 @@
-require 'http'
 require 'stdlib/base'
 
 package :rpi_linux do
