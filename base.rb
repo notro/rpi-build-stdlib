@@ -1,27 +1,16 @@
 # not needed when building on the Raspberry Pi
 unless uname_m == 'armv6l'
   package :rpi_tools do
-    ENV['RPI_TOOLS_BRANCH'] ||= 'master'
-    env_store 'RPI_TOOLS_SHA' do
-      github_get_head('raspberrypi/tools', ENV['RPI_TOOLS_BRANCH'])
-    end
-    github_tarball 'raspberrypi/tools', 'tools', ENV['RPI_TOOLS_SHA']
+    # override default env vars: RPI_TOOLS_BRANCH and RPI_TOOLS_SHA
+    github_tarball 'raspberrypi/tools', 'tools', 'RPI_TOOLS'
   end
 else
   package :rpi_tools
 end
 
 package :rpi_firmware do |t|
-  # if RPI_FIRMWARE_SHA is not set, find the latest commit on
-  #   branch RPI_FIRMWARE_BRANCH (defaults to 'master'),
-  #   and store this value for later runs
-  ENV['RPI_FIRMWARE_BRANCH'] ||= 'master'
-  env_store 'RPI_FIRMWARE_SHA' do
-    github_get_head('raspberrypi/firmware', ENV['RPI_FIRMWARE_BRANCH'])
-  end
-
-  # source
-  github_tarball 'raspberrypi/firmware', 'firmware', ENV['RPI_FIRMWARE_SHA']
+  # override default env vars: RPI_FIRMWARE_BRANCH and RPI_FIRMWARE_SHA
+  github_tarball 'raspberrypi/firmware', 'firmware', 'RPI_FIRMWARE'
 
   task :install do
     src = workdir 'firmware'

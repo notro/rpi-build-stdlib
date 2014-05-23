@@ -1,4 +1,3 @@
-require 'stdlib/base'
 
 package :rpi_linux do
   # if branch is set, use it
@@ -6,7 +5,8 @@ package :rpi_linux do
   # else use the commit that was used to build the firmware
   ENV['RPI_LINUX_SHA'] ||= http_get("https://raw.githubusercontent.com/raspberrypi/firmware/#{ENV['RPI_FIRMWARE_SHA']}/extra/git_hash").to_s.strip
 
-  github_tarball "raspberrypi/linux", 'linux', ENV['RPI_LINUX_SHA']
+  # override default env vars: RPI_LINUX_BRANCH and RPI_LINUX_SHA
+  github_tarball "raspberrypi/linux", 'linux', 'RPI_LINUX'
 
   config 'LOCALVERSION', :str, "+"
 
