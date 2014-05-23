@@ -38,3 +38,18 @@ package :rpi_firmware do |t|
 		cp_r(src + "/hardfp/opt/vc/sbin/", dst + "/vc/hardfp/opt/vc")
   end
 end
+
+# https://github.com/Hexxeh/rpi-update/issues/106
+package :issue106 do
+  target :build do
+		pre_install <<END
+echo "    Work around rpi-update issue #106"
+find "${FW_REPOLOCAL}/modules" -mindepth 1 -maxdepth 1 -type d | while read DIR; do
+	BASEDIR=$(basename "${DIR}")
+	rm -rf "${FW_MODPATH}/${BASEDIR}/kernel"
+done
+echo
+
+END
+  end
+end
