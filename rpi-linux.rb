@@ -17,10 +17,8 @@ package :rpi_linux do
 
 		cp_r(ksrc + "/arch/arm/boot/Image", dst + "/kernel.img")
 		mkdir_p(dst + "/modules")
-    unless FileList["#{msrc}/lib/modules/*"].empty?
-      sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/"
-      sh "cp -r #{msrc}/lib/firmware #{dst}/"
-    end
+    sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/" unless FileList["#{msrc}/lib/modules/*"].empty?
+    sh "cp -r #{msrc}/lib/firmware #{dst}/" unless FileList["#{msrc}/lib/firmware/*"].empty?
 		cp_r(ksrc + "/Module.symvers", dst)
     File.open("#{dst}/git_hash", 'w') { |file| file.write(ENV['RPI_LINUX_SHA']) }
 		mkdir_p(dst + "/extra")
