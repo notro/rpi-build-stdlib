@@ -43,7 +43,7 @@ end
 package :issue106 do
   target :build do
 		pre_install <<END
-echo "    Work around rpi-update issue #106"
+echo "     Work around rpi-update issue #106"
 find "${FW_REPOLOCAL}/modules" -mindepth 1 -maxdepth 1 -type d | while read DIR; do
 	BASEDIR=$(basename "${DIR}")
 	rm -rf "${FW_MODPATH}/${BASEDIR}/kernel"
