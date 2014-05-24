@@ -48,7 +48,6 @@ find "${FW_REPOLOCAL}/modules" -mindepth 1 -maxdepth 1 -type d | while read DIR;
 	BASEDIR=$(basename "${DIR}")
 	rm -rf "${FW_MODPATH}/${BASEDIR}/kernel"
 done
-echo
 
 END
   end
