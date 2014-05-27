@@ -1,11 +1,9 @@
 # The h value in question is the id of the tree object you are currently looking at.
 #   http://stackoverflow.com/questions/14444593/gitweb-snapshot-of-sub-directory
 package :uboot do
-  ENV['UBOOT_BRANCH'] ||= 'master'
-  env_store 'UBOOT_ID' do
-    gitweb_get_head 'http://git.denx.de/?p=u-boot/u-boot-arm.git', ENV['UBOOT_BRANCH']
-  end
-  gitweb_tarball('http://git.denx.de/?p=u-boot/u-boot-arm.git', 'u-boot', ENV['UBOOT_ID'])
+  VAR['UBOOT_BRANCH'] ||= 'master'
+  VAR['UBOOT_ID'] ||= gitweb_get_head 'http://git.denx.de/?p=u-boot/u-boot-arm.git', VAR['UBOOT_BRANCH']
+  gitweb_tarball('http://git.denx.de/?p=u-boot/u-boot-arm.git', 'u-boot', VAR['UBOOT_ID'])
 
   scr = <<END
 setenv prop-2-2 'mw.l 0x00001000 0x00000020 ; mw.l 0x00001004 0x00000000 ; mw.l 0x00001008 \$tag ; mw.l 0x0000100c 0x00000008 ; mw.l 0x00001010 0x00000008 ; mw.l 0x00001014 \$p1 ; mw.l 0x00001018 \$p2 ; mw.l 0x0000101c 0x00000000 ; md.l 0x1000 8'
@@ -40,8 +38,8 @@ EOM
 end
 
 package :linux_org do
-  raise "missing environment variable LINUX_ORG_VERSION" unless ENV['LINUX_ORG_VERSION']
-  fn = "linux-#{ENV['LINUX_ORG_VERSION']}.tar.xz"
+  raise "missing environment variable LINUX_ORG_VERSION" unless VAR['LINUX_ORG_VERSION']
+  fn = "linux-#{VAR['LINUX_ORG_VERSION']}.tar.xz"
   dl = download "https://www.kernel.org/pub/linux/kernel/v3.x/#{fn}", fn
   un = unpack fn, 'linux'
   un.enhance [dl.name]
