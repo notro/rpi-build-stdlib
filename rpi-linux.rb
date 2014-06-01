@@ -8,6 +8,7 @@ package :rpi_linux do
   # override default env vars: RPI_LINUX_BRANCH and RPI_LINUX_SHA
   github_tarball "raspberrypi/linux", 'linux', 'RPI_LINUX'
 
+  ENV['LINUX_DEFCONFIG'] ||= 'bcmrpi_defconfig'
   config 'LOCALVERSION', :str, "+"
 
   task :install do

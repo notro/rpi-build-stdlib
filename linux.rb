@@ -66,6 +66,7 @@ package :linux_org do
   un = unpack fn, 'linux'
   un.enhance [dl.name]
 
+  ENV['LINUX_DEFCONFIG'] ||= 'bcm2835_defconfig'
   config ['CONFIG_IKCONFIG', 'CONFIG_IKCONFIG_PROC'], :enable
   config 'PROC_DEVICETREE', :enable
 

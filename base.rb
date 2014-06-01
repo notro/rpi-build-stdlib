@@ -1,5 +1,5 @@
 # not needed when building on the Raspberry Pi
-unless uname_m == 'armv6l'
+unless rpi?
   package :rpi_tools do
     # override default env vars: RPI_TOOLS_BRANCH and RPI_TOOLS_SHA
     github_tarball 'raspberrypi/tools', 'tools', 'RPI_TOOLS'
