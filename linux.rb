@@ -1,9 +1,6 @@
-# The h value in question is the id of the tree object you are currently looking at.
-#   http://stackoverflow.com/questions/14444593/gitweb-snapshot-of-sub-directory
+
 package :uboot do
-  VAR['UBOOT_BRANCH'] ||= 'master'
-  VAR['UBOOT_ID'] ||= gitweb_get_head 'http://git.denx.de/?p=u-boot/u-boot-arm.git', VAR['UBOOT_BRANCH']
-  gitweb_tarball('http://git.denx.de/?p=u-boot/u-boot-arm.git', 'u-boot', VAR['UBOOT_ID'])
+  gitweb_tarball 'http://git.denx.de/?p=u-boot/u-boot-arm.git', 'u-boot', 'UBOOT'
 
   # regarding USB controller power: https://plus.google.com/+StephenWarren/posts/gWkwrfNfYVm
   scr = <<END
