@@ -29,7 +29,7 @@ END
 #bootcmd=echo Overriding bootcmd...; for target in ${boot_targets}; do run bootcmd_${target}; done
 EOM
 
-  target :build do
+  target :kbuild do
     sh "cd #{workdir 'u-boot'} && #{cross_compile} ./MAKEALL --continue rpi_b"
 
     scr_fn = workdir 'boot.scr'
@@ -47,7 +47,7 @@ EOM
 
   end
 
-  target :install do
+  target :build do
     dst = workdir 'out'
     cp workdir('boot.scr.uimg'), dst
     cp workdir('uEnv.txt'), dst
@@ -67,14 +67,14 @@ package :linux_org do
   config ['CONFIG_IKCONFIG', 'CONFIG_IKCONFIG_PROC'], :enable
   config 'PROC_DEVICETREE', :enable
 
-  target :build do
+  target :kbuild do
     post_install <<EOM
 cp "${FW_REPOLOCAL}/zImage" "${FW_PATH}/"
 
 EOM
 	end
 
-  target :install do
+  target :build do
     dst = workdir 'out'
     ksrc = workdir 'linux'
     msrc = workdir 'modules'

@@ -11,7 +11,7 @@ package :rpi_linux do
   ENV['LINUX_DEFCONFIG'] ||= 'bcmrpi_defconfig'
   config 'LOCALVERSION', :str, "+"
 
-  task :install do
+  task :build do
     dst = workdir 'out'
     ksrc = workdir 'linux'
     msrc = workdir 'modules'

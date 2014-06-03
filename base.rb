@@ -12,7 +12,7 @@ package :rpi_firmware do |t|
   # override default env vars: RPI_FIRMWARE_BRANCH and RPI_FIRMWARE_SHA
   github_tarball 'raspberrypi/firmware', 'firmware', 'RPI_FIRMWARE'
 
-  task :install do
+  task :build do
     src = workdir 'firmware'
     dst = workdir 'out'
 
@@ -41,7 +41,7 @@ end
 
 # https://github.com/Hexxeh/rpi-update/issues/106
 package :issue106 do
-  target :build do
+  target :kbuild do
 		pre_install <<END
 echo "     Work around rpi-update issue #106"
 find "${FW_REPOLOCAL}/modules" -mindepth 1 -maxdepth 1 -type d | while read DIR; do
