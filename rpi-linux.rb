@@ -1,7 +1,7 @@
 
 package :rpi_linux do
   # if branch is set, use it
-  VAR['RPI_LINUX_SHA'] ||= github_get_head('raspberrypi/firmware', VAR['RPI_LINUX_BRANCH']) if VAR['RPI_LINUX_BRANCH']
+  VAR['RPI_LINUX_SHA'] ||= github_get_head('raspberrypi/linux', VAR['RPI_LINUX_BRANCH']) if VAR['RPI_LINUX_BRANCH']
   # else use the commit that was used to build the firmware
   VAR['RPI_LINUX_SHA'] ||= http_get("https://raw.githubusercontent.com/raspberrypi/firmware/#{VAR['RPI_FIRMWARE_SHA']}/extra/git_hash").to_s.strip
 
