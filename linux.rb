@@ -56,10 +56,10 @@ EOM
 
 end
 
-package :linux_org do
-  raise "missing environment variable LINUX_ORG_VERSION" unless VAR['LINUX_ORG_VERSION']
-  fn = "linux-#{VAR['LINUX_ORG_VERSION']}.tar.xz"
-  dl = download "https://www.kernel.org/pub/linux/kernel/v3.x/#{fn}", fn, "linux-#{VAR['LINUX_ORG_VERSION']}.tar.xz"
+package :kernel_org do
+  raise "missing environment variable KERNEL_ORG_VERSION" unless VAR['KERNEL_ORG_VERSION']
+  fn = "linux-#{VAR['KERNEL_ORG_VERSION']}.tar.xz"
+  dl = download "https://www.kernel.org/pub/linux/kernel/v3.x/#{fn}", fn, fn
   un = unpack fn, 'linux'
   un.enhance [dl.name]
 
