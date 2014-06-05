@@ -2,10 +2,12 @@ require 'stdlib/base'
 require 'stdlib/rpi-linux'
 require 'stdlib/linux'
 
+# get linux sha from raspberrypi/firmware master branch
 release :rpi_linux_master => [:issue106, :rpi_tools, :rpi_firmware, :rpi_linux]
 
+# get linux sha from raspberrypi/firmware next branch
 release :rpi_linux_next => [:issue106, :rpi_tools, :rpi_firmware, :rpi_linux] do
-  something
+  VAR['RPI_FIRMWARE_BRANCH'] = 'next'
 end
 
 release :linux => [:issue106, :rpi_tools, :rpi_firmware, :uboot_bcm2835, :kernel_org] do
