@@ -9,9 +9,18 @@ package :rpi_linux do
   github_tarball "raspberrypi/linux", 'linux', 'RPI_LINUX'
 
   ENV['LINUX_DEFCONFIG'] ||= 'bcmrpi_defconfig'
-  config 'LOCALVERSION', :str, "+"
 
-  task :build do
+  # When building directly from the git repo, KERNELRELEASE gets a '+' appended
+  # When we build from a tarball, the Makefile can't see we're not vanilla, so we set it manually.
+  # In short from Makefile:
+  # KERNELRELEASE = @echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
+  target :patch do
+    fn = workdir 'linux/localversion+'
+    info "Create #{fn}"
+    File.open(fn, 'w') { |file| file.write '+' }
+  end
+
+  target :build do
     dst = workdir 'out'
     ksrc = workdir 'linux'
     msrc = workdir 'modules'
