@@ -1,7 +1,18 @@
 
-package :uboot do
+package :uboot_arm do
   gitweb_tarball 'http://git.denx.de/?p=u-boot/u-boot-arm.git', 'u-boot', 'UBOOT'
 
+  target :kbuild do
+    sh "cd #{workdir 'u-boot'} && #{cross_compile} ./MAKEALL --continue rpi_b"
+  end
+
+  target :build do
+    dst = workdir 'out'
+    cp workdir('u-boot/u-boot.bin'), "#{dst}/kernel.img"
+  end
+end
+
+package :uboot_bcm2835 => :uboot_arm do
   # regarding USB controller power: https://plus.google.com/+StephenWarren/posts/gWkwrfNfYVm
   scr = <<END
 if test -n "$bootargs"; then
@@ -30,8 +41,6 @@ END
 EOM
 
   target :kbuild do
-    sh "cd #{workdir 'u-boot'} && #{cross_compile} ./MAKEALL --continue rpi_b"
-
     scr_fn = workdir 'boot.scr'
     File.open(scr_fn, 'w') { |file| file.write scr }
     mkimage = workdir 'u-boot/tools/mkimage'
@@ -44,16 +53,13 @@ cp "${FW_REPOLOCAL}/"*.uimg "${FW_PATH}/"
 cp "${FW_REPOLOCAL}/"uEnv.txt "${FW_PATH}/"
 
 EOM
-
   end
 
   target :build do
     dst = workdir 'out'
     cp workdir('boot.scr.uimg'), dst
     cp workdir('uEnv.txt'), dst
-    cp workdir('u-boot/u-boot.bin'), "#{dst}/kernel.img"
   end
-
 end
 
 package :kernel_org do
