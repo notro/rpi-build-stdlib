@@ -1,5 +1,6 @@
 require 'stdlib/base'
 require 'stdlib/rpi-linux'
+require 'stdlib/uboot'
 require 'stdlib/linux'
 
 # get linux sha from raspberrypi/firmware master branch
