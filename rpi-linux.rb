@@ -1,4 +1,11 @@
 
+# VideoCore bootloader
+package :vboot do
+  target :build do
+		cp_r workdir('linux/arch/arm/boot/Image'), workdir('out/kernel.img')
+  end
+end
+
 package :rpi_linux do
   # if branch is set, use it
   VAR['RPI_LINUX_SHA'] ||= github_get_head('raspberrypi/linux', VAR['RPI_LINUX_BRANCH']) if VAR['RPI_LINUX_BRANCH']
@@ -25,7 +32,6 @@ package :rpi_linux do
     ksrc = workdir 'linux'
     msrc = workdir 'modules'
 
-		cp_r(ksrc + "/arch/arm/boot/Image", dst + "/kernel.img")
 		mkdir_p(dst + "/modules")
     sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/" unless FileList["#{msrc}/lib/modules/*"].empty?
     sh "cp -r #{msrc}/lib/firmware #{dst}/" unless FileList["#{msrc}/lib/firmware/*"].empty?

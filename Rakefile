@@ -4,10 +4,10 @@ require 'stdlib/uboot'
 require 'stdlib/linux'
 
 # get linux sha from raspberrypi/firmware master branch
-release :rpi_linux_master => [:issue106, :rpi_tools, :rpi_firmware, :rpi_linux]
+release :rpi_linux_master => [:issue106, :rpi_tools, :rpi_firmware, :vboot, :rpi_linux]
 
 # get linux sha from raspberrypi/firmware next branch
-release :rpi_linux_next => [:issue106, :rpi_tools, :rpi_firmware, :rpi_linux] do
+release :rpi_linux_next => [:issue106, :rpi_tools, :rpi_firmware, :vboot, :rpi_linux] do
   VAR['RPI_FIRMWARE_BRANCH'] = 'next'
 end
 
