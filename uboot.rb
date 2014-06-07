@@ -67,7 +67,7 @@ end
 # U-Boot copies the bootargs variable to Device Tree chosen/bootargs
 package :uboot_bcm2708 => :uboot_arm do
   target :patch do
-    Readme.patch "* Add ATAG_CMDLINE to bootargs support\n"
+    Readme.patch "* U-Boot: Copy ATAG_CMDLINE to bootargs environment variable\n"
     insert_before workdir('u-boot/include/configs/rpi_b.h'), '#define CONFIG_SYS_DCACHE_OFF', "#define CONFIG_MISC_INIT_R\n"
     fn = workdir('u-boot/board/raspberrypi/rpi_b/rpi_b.c')
     insert_after fn, "#include <asm/global_data.h>\n", "#include <asm/setup.h>\n"
