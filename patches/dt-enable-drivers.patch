@@ -1,0 +1,108 @@
+diff --git a/drivers/i2c/busses/i2c-bcm2708.c b/drivers/i2c/busses/i2c-bcm2708.c
+index 33f4e7d..afe077b 100644
+--- a/drivers/i2c/busses/i2c-bcm2708.c
++++ b/drivers/i2c/busses/i2c-bcm2708.c
+@@ -26,6 +26,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+@@ -269,6 +270,21 @@ static int bcm2708_i2c_probe(struct platform_device *pdev)
+ 	struct bcm2708_i2c *bi;
+ 	struct i2c_adapter *adap;
+ 
++	if (pdev->dev.of_node) {
++		u32 bus_clk_rate;
++		pdev->id = of_alias_get_id(pdev->dev.of_node, "i2c");
++		if (pdev->id < 0) {
++			dev_err(&pdev->dev, "alias is missing\n");
++			return -EINVAL;
++		}
++		if (!of_property_read_u32(pdev->dev.of_node,
++					"clock-frequency", &bus_clk_rate))
++			baudrate = bus_clk_rate;
++		else
++			dev_warn(&pdev->dev,
++				"Could not read clock-frequency property\n");
++	}
++
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!regs) {
+ 		dev_err(&pdev->dev, "could not get IO memory\n");
+@@ -375,10 +391,17 @@ static int bcm2708_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id bcm2708_i2c_of_match[] = {
++        { .compatible = "brcm,bcm2708-i2c" },
++        {},
++};
++MODULE_DEVICE_TABLE(of, bcm2708_i2c_of_match);
++
+ static struct platform_driver bcm2708_i2c_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = bcm2708_i2c_of_match,
+ 	},
+ 	.probe		= bcm2708_i2c_probe,
+ 	.remove		= bcm2708_i2c_remove,
+diff --git a/drivers/spi/spi-bcm2708.c b/drivers/spi/spi-bcm2708.c
+index abaa5a6..78016d9 100644
+--- a/drivers/spi/spi-bcm2708.c
++++ b/drivers/spi/spi-bcm2708.c
+@@ -512,6 +512,7 @@ static int bcm2708_spi_probe(struct platform_device *pdev)
+ 	master->setup = bcm2708_spi_setup;
+ 	master->transfer = bcm2708_spi_transfer;
+ 	master->cleanup = bcm2708_spi_cleanup;
++	master->dev.of_node = pdev->dev.of_node;
+ 	platform_set_drvdata(pdev, master);
+ 
+ 	bs = spi_master_get_devdata(master);
+@@ -545,7 +546,7 @@ static int bcm2708_spi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* initialise the hardware */
+-	clk_enable(clk);
++	clk_prepare_enable(clk);
+ 	bcm2708_wr(bs, SPI_CS, SPI_CS_REN | SPI_CS_CLEAR_RX | SPI_CS_CLEAR_TX);
+ 
+ 	err = spi_register_master(master);
+@@ -560,6 +561,7 @@ static int bcm2708_spi_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ out_free_irq:
++	clk_disable_unprepare(bs->clk);
+ 	free_irq(bs->irq, master);
+ out_workqueue:
+ 	destroy_workqueue(bs->workq);
+@@ -585,7 +587,7 @@ static int bcm2708_spi_remove(struct platform_device *pdev)
+ 
+ 	flush_work_sync(&bs->work);
+ 
+-	clk_disable(bs->clk);
++	clk_disable_unprepare(bs->clk);
+ 	clk_put(bs->clk);
+ 	free_irq(bs->irq, master);
+ 	iounmap(bs->base);
+@@ -595,10 +597,17 @@ static int bcm2708_spi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id bcm2708_spi_match[] = {
++	{ .compatible = "brcm,bcm2708-spi", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, bcm2708_spi_match);
++
+ static struct platform_driver bcm2708_spi_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= bcm2708_spi_match,
+ 	},
+ 	.probe		= bcm2708_spi_probe,
+ 	.remove		= bcm2708_spi_remove,

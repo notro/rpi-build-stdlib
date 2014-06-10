@@ -1,0 +1,30 @@
+From 07a27a0047274e0ba568ce86b6416c34497a99a7 Mon Sep 17 00:00:00 2001
+From: Florian Meier <florian.meier@koalo.de>
+Date: Mon, 25 Nov 2013 09:01:50 +0100
+Subject: [PATCH] i2c: bcm2835: Linking platform nodes to adapter nodes
+
+In order to find I2C devices in the device tree, the platform nodes
+have to be known by the I2C core. This requires setting the
+dev.of_node parameter of the adapter.
+
+Signed-off-by: Florian Meier <florian.meier@koalo.de>
+Tested-by: Stephen Warren <swarren@wwwdotorg.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+---
+ drivers/i2c/busses/i2c-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
+index d7e8600..77df97b 100644
+--- a/drivers/i2c/busses/i2c-bcm2835.c
++++ b/drivers/i2c/busses/i2c-bcm2835.c
+@@ -299,6 +299,7 @@ static int bcm2835_i2c_probe(struct platform_device *pdev)
+ 	strlcpy(adap->name, "bcm2835 I2C adapter", sizeof(adap->name));
+ 	adap->algo = &bcm2835_i2c_algo;
+ 	adap->dev.parent = &pdev->dev;
++	adap->dev.of_node = pdev->dev.of_node;
+ 
+ 	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C, 0);
+ 
+-- 
+1.9.3
