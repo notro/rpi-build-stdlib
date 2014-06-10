@@ -17,14 +17,18 @@ package :rpi_linux do
 
   ENV['LINUX_DEFCONFIG'] ||= 'bcmrpi_defconfig'
 
-  # When building directly from the git repo, KERNELRELEASE gets a '+' appended
-  # When we build from a tarball, the Makefile can't see we're not vanilla, so we set it manually.
+  # When building directly from a git repo, KERNELRELEASE gets a '+' appended
+  # When we build from a tarball, the Makefile can't see we're not vanilla, so we have to set it manually.
+  # Options:
+  # * Use a localversion file: if we use diffprep it's turned into a git repo and we end up with ++
+  # * Use LOCALVERSION env var: This will be lost if doing work outside of rpi-build
+  # * Use a .scmversion file: This will be used regardless of git or no git
+  #
   # In short from Makefile:
   # KERNELRELEASE = @echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
+  #
   target :unpack do
-    fn = workdir 'linux/localversion+'
-    info "Create #{fn}"
-    File.open(fn, 'w') { |file| file.write '+' }
+    File.write workdir('linux/.scmversion'), '+'
   end
 
   target :build do
