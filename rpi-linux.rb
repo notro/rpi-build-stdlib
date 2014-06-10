@@ -21,7 +21,7 @@ package :rpi_linux do
   # When we build from a tarball, the Makefile can't see we're not vanilla, so we set it manually.
   # In short from Makefile:
   # KERNELRELEASE = @echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
-  target :patch do
+  target :unpack do
     fn = workdir 'linux/localversion+'
     info "Create #{fn}"
     File.open(fn, 'w') { |file| file.write '+' }
