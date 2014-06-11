@@ -6,6 +6,31 @@ package :vboot do
   end
 end
 
+def raspberrypi_linux_latest
+  cmd = "git ls-remote -h https://github.com/raspberrypi/linux"
+  s = `#{cmd}`
+  unless $?.exitstatus == 0
+    puts cmd
+    puts s
+    raise "Could not get latest branch from raspberrypi/linux (status #{$?.exitstatus})"
+  end
+  branch = nil
+  last = 0
+  s.scan(/^[0-9a-f]+\s+refs\/heads\/rpi\-(\d)\.(\d+)\.y(.*)$/).each do |m|
+    next unless m[2].empty?
+    weight = m[0].to_i * 1000 + m[1].to_i
+    if weight > last
+      last = weight
+      branch = "rpi-#{m[0]}.#{m[1]}.y"
+    end
+  end
+  unless branch
+    puts s
+    raise "Could not get latest branch from raspberrypi/linux"
+  end
+  branch
+ end
+
 package :raspberrypi_linux do
   # if branch is set, use it
   VAR['RPI_LINUX_SHA'] ||= github_get_head('raspberrypi/linux', VAR['RPI_LINUX_BRANCH']) if VAR['RPI_LINUX_BRANCH']

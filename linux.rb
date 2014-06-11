@@ -1,4 +1,16 @@
 
+def kernelorg_linux_latest
+  url = 'https://www.kernel.org/finger_banner'
+  s = http_get url
+  fn = nil
+  m = s.match(/The latest mainline (\d+) version of the Linux kernel is:\s+(\d\.\d+)$/)
+  unless m
+    puts s
+    raise "Could not get latest mainline version number from #{url}"
+  end
+  m[2]
+end
+
 package :kernelorg_linux do
   raise "missing environment variable KERNEL_ORG_VERSION" unless VAR['KERNEL_ORG_VERSION']
   fn = "linux-#{VAR['KERNEL_ORG_VERSION']}.tar.xz"
