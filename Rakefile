@@ -8,8 +8,8 @@ require 'stdlib/linux'
 release :rpi_linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
 
 release :rpi_linux_latest => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux] do
-  VAR['RPI_LINUX_BRANCH'] ||= raspberrypi_linux_latest
-  info "RPI_LINUX_BRANCH = #{ENV['RPI_LINUX_BRANCH']}"
+  VAR['RASPBERRYPI_LINUX_BRANCH'] ||= raspberrypi_linux_latest
+  info "RASPBERRYPI_LINUX_BRANCH = #{ENV['RASPBERRYPI_LINUX_BRANCH']}"
 end
 
 # get linux sha from raspberrypi/firmware master branch

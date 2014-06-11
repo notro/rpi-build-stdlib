@@ -4,8 +4,7 @@ unless rpi?
     if VAR['CROSS_COMPILE']
       puts "raspberrypi_tools: CROSS_COMPILE=#{VAR['CROSS_COMPILE']}"
     else
-      # override default env vars: RPI_TOOLS_BRANCH and RPI_TOOLS_SHA
-      github_tarball 'raspberrypi/tools', 'tools', 'RPI_TOOLS'
+      github_tarball 'raspberrypi/tools', 'tools', 'RASPBERRYPI_TOOLS'
     end
   end
 else
@@ -13,8 +12,7 @@ else
 end
 
 package :raspberrypi_firmware do |t|
-  # override default env vars: RPI_FIRMWARE_BRANCH and RPI_FIRMWARE_SHA
-  github_tarball 'raspberrypi/firmware', 'firmware', 'RPI_FIRMWARE'
+  github_tarball 'raspberrypi/firmware', 'firmware', 'RASPBERRYPI_FIRMWARE'
 
   target :build do
     src = workdir 'firmware'
