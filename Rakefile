@@ -16,7 +16,7 @@ end
 release :rpi_linux_dt => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2708, :raspberrypi_linux_dt]
 
 
-release :linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2835, :kernel_org] do
+release :linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2835, :kernelorg_linux] do
   raise "missing KERNEL_ORG_VERSION environment variable (e.g. 3.14.3)" unless VAR['KERNEL_ORG_VERSION']
   VAR.store 'KERNEL_ORG_VERSION'
 end

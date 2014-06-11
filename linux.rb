@@ -1,5 +1,5 @@
 
-package :kernel_org do
+package :kernelorg_linux do
   raise "missing environment variable KERNEL_ORG_VERSION" unless VAR['KERNEL_ORG_VERSION']
   fn = "linux-#{VAR['KERNEL_ORG_VERSION']}.tar.xz"
   dl = download "https://www.kernel.org/pub/linux/kernel/v3.x/#{fn}", fn, fn
