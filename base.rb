@@ -16,7 +16,7 @@ package :rpi_firmware do |t|
   # override default env vars: RPI_FIRMWARE_BRANCH and RPI_FIRMWARE_SHA
   github_tarball 'raspberrypi/firmware', 'firmware', 'RPI_FIRMWARE'
 
-  task :build do
+  target :build do
     src = workdir 'firmware'
     dst = workdir 'out'
 
