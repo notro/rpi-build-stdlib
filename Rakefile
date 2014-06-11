@@ -5,18 +5,18 @@ require 'stdlib/rpi-linux-dt'
 require 'stdlib/linux'
 
 # get linux sha from raspberrypi/firmware master branch
-release :rpi_linux_master => [:issue106, :rpi_tools, :rpi_firmware, :vboot, :rpi_linux]
+release :rpi_linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
 
 # get linux sha from raspberrypi/firmware next branch
-release :rpi_linux_next => [:issue106, :rpi_tools, :rpi_firmware, :vboot, :rpi_linux] do
-  VAR['RPI_FIRMWARE_BRANCH'] = 'next'
+release :rpi_linux_latest => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux] do
+  VAR['RPI_FIRMWARE_BRANCH'] = 'latest'
 end
 
 # get linux sha from raspberrypi/firmware master branch
-release :rpi_linux_dt_master => [:issue106, :rpi_tools, :rpi_firmware, :uboot_bcm2708, :rpi_linux_dt]
+release :rpi_linux_dt => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2708, :raspberrypi_linux_dt]
 
 
-release :linux => [:issue106, :rpi_tools, :rpi_firmware, :uboot_bcm2835, :kernel_org] do
+release :linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2835, :kernel_org] do
   raise "missing KERNEL_ORG_VERSION environment variable (e.g. 3.14.3)" unless VAR['KERNEL_ORG_VERSION']
   VAR.store 'KERNEL_ORG_VERSION'
 end

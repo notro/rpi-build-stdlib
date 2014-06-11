@@ -1,18 +1,18 @@
 # not needed when building on the Raspberry Pi
 unless rpi?
-  package :rpi_tools do
+  package :raspberrypi_tools do
     if VAR['CROSS_COMPILE']
-      puts "rpi_tools: CROSS_COMPILE=#{VAR['CROSS_COMPILE']}"
+      puts "raspberrypi_tools: CROSS_COMPILE=#{VAR['CROSS_COMPILE']}"
     else
       # override default env vars: RPI_TOOLS_BRANCH and RPI_TOOLS_SHA
       github_tarball 'raspberrypi/tools', 'tools', 'RPI_TOOLS'
     end
   end
 else
-  package :rpi_tools
+  package :raspberrypi_tools
 end
 
-package :rpi_firmware do |t|
+package :raspberrypi_firmware do |t|
   # override default env vars: RPI_FIRMWARE_BRANCH and RPI_FIRMWARE_SHA
   github_tarball 'raspberrypi/firmware', 'firmware', 'RPI_FIRMWARE'
 

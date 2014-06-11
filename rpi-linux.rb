@@ -6,7 +6,7 @@ package :vboot do
   end
 end
 
-package :rpi_linux do
+package :raspberrypi_linux do
   # if branch is set, use it
   VAR['RPI_LINUX_SHA'] ||= github_get_head('raspberrypi/linux', VAR['RPI_LINUX_BRANCH']) if VAR['RPI_LINUX_BRANCH']
   # else use the commit that was used to build the firmware

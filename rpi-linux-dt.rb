@@ -3,7 +3,7 @@ require 'stdlib/uboot'
 require 'stdlib/rpi-linux'
 
 
-package :rpi_linux_dt => :rpi_linux do
+package :raspberrypi_linux_dt => :raspberrypi_linux do
 
   # pinctrl driver
   # Verbatim copy of pinctrl-bcm2835.c except for the probe funtion.
