@@ -4,10 +4,12 @@ require 'stdlib/uboot'
 require 'stdlib/rpi-linux-dt'
 require 'stdlib/linux'
 
-# get linux ref from raspberrypi/firmware master branch
-release :rpi_linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
+package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
 
-release :rpi_linux_latest => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux] do
+# get linux ref from raspberrypi/firmware master branch
+release :rpi_linux => :rpi_linux_common
+
+release :rpi_linux_latest => :rpi_linux_common do
   VAR['RASPBERRYPI_LINUX_BRANCH'] ||= raspberrypi_linux_latest
   info "RASPBERRYPI_LINUX_BRANCH = #{ENV['RASPBERRYPI_LINUX_BRANCH']}"
 end
