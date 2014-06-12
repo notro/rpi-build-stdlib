@@ -4,8 +4,6 @@ require 'stdlib/uboot'
 require 'stdlib/rpi-linux-dt'
 require 'stdlib/linux'
 
-package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
-
 # get linux ref from raspberrypi/firmware master branch
 release :rpi_linux => :rpi_linux_common
 

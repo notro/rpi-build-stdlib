@@ -1,3 +1,6 @@
+require 'stdlib/base'
+
+package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
 
 # VideoCore bootloader
 package :vboot do
