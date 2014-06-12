@@ -1,9 +1,9 @@
 require 'stdlib/base'
 
-package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
+package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vcboot, :raspberrypi_linux]
 
 # VideoCore bootloader
-package :vboot do
+package :vcboot do
   target :build do
 		cp_r workdir('linux/arch/arm/boot/Image'), workdir('out/kernel.img')
   end
