@@ -4,7 +4,7 @@ require 'stdlib/uboot'
 require 'stdlib/rpi-linux-dt'
 require 'stdlib/linux'
 
-# get linux sha from raspberrypi/firmware master branch
+# get linux ref from raspberrypi/firmware master branch
 release :rpi_linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux]
 
 release :rpi_linux_latest => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vboot, :raspberrypi_linux] do
@@ -12,7 +12,7 @@ release :rpi_linux_latest => [:issue106, :raspberrypi_tools, :raspberrypi_firmwa
   info "RASPBERRYPI_LINUX_BRANCH = #{ENV['RASPBERRYPI_LINUX_BRANCH']}"
 end
 
-# get linux sha from raspberrypi/firmware master branch
+# get linux ref from raspberrypi/firmware master branch
 release :rpi_linux_dt => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2708, :raspberrypi_linux_dt]
 
 
