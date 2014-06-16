@@ -41,7 +41,7 @@ EOM
     fn = workdir 'linux/drivers/pinctrl/pinctrl-bcm2708.c'
     File.write fn, s
     # insert new probe funtion
-    probe = File.read 'files/pinctrl-bcm2708-probe.c'
+    probe = File.read findfile 'files/pinctrl-bcm2708-probe.c'
     insert_before fn, 'static int bcm2708_pinctrl_remove', probe
     insert_before fn, '#include <linux/of_irq.h>', "#include <linux/of_gpio.h>\n"
     insert_after fn, ' * Copyright (C) 2012 Chris Boot, Simon Arlott, Stephen Warren', """
@@ -81,7 +81,8 @@ EOM
   # Copy Device Tree files
   #   arch/arm/boot/dts/{*.dtsi,*.dts}
   target :patch do
-    sh "cp -v files/*.dtsi files/*.dts #{workdir 'linux/arch/arm/boot/dts/'}"
+    d = File.dirname findfile 'files/bcm2708-rpi-b.dts'
+    sh "cp -v #{d}/*.dtsi #{d}/*.dts #{workdir 'linux/arch/arm/boot/dts/'}"
     insert_before workdir('linux/arch/arm/boot/dts/Makefile'), 'dtb-$(CONFIG_ARCH_BCM2835)', "dtb-$(CONFIG_BCM2708_DT) += bcm2708-rpi-b.dtb\n"
     insert_before workdir('linux/arch/arm/boot/dts/Makefile'), 'dtb-$(CONFIG_ARCH_BCM2835)', "dtb-$(CONFIG_BCM2708_DT) += bcm2708-rpi-b-test.dtb\n"
   end
