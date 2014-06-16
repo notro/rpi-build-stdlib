@@ -167,7 +167,7 @@ EOM
   target :patch do
     Readme.patch "* Make it possible to choose I2C_BCM2835 and SPI_BCM2835 with MACH_BCM2708\n"
     replace workdir('linux/drivers/i2c/busses/Kconfig'), 'depends on ARCH_BCM2835', 'depends on ARCH_BCM2835 || MACH_BCM2708'
-    replace workdir('linux/drivers/spi/Kconfig'), 'depends on ARCH_BCM2835', 'depends on (ARCH_BCM2835 || MACH_BCM2708)'
+    replace workdir('linux/drivers/spi/Kconfig'), 'depends on ARCH_BCM2835', 'depends on ARCH_BCM2835 || MACH_BCM2708'
   end
   # for 3.12
   patch 'i2c--bcm2835--Linking-platform-nodes-to-adapter-nodes.patch'
