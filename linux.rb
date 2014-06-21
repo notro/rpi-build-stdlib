@@ -3,7 +3,7 @@ def kernelorg_linux_latest
   url = 'https://www.kernel.org/finger_banner'
   s = http_get url
   fn = nil
-  m = s.match(/The latest mainline (\d+) version of the Linux kernel is:\s+(\d\.\d+)$/)
+  m = s.match(/The latest stable ([\d\.]+) version of the Linux kernel is:\s+(\d+\.\d+\.\d+.*)$/)
   unless m
     puts s
     raise "Could not get latest mainline version number from #{url}"
@@ -17,11 +17,12 @@ package :kernelorg_linux do
   dl = download "https://www.kernel.org/pub/linux/kernel/v3.x/#{fn}", fn, fn
 
   t = file download_dir("#{fn}.sha") do |t|
+    next if VAR['KERNEL_ORG_SKIP_SHA'] == '1'
     sums_url = "https://www.kernel.org/pub/linux/kernel/v3.x/sha256sums.asc"
     info "Create #{t.name} from #{sums_url}"
     sums = http_get sums_url
     m = sums.match(/([0-9a-f]+ .#{fn})/)
-    raise "Could not get '#{fn}' shasum from #{sums_url}" unless m
+    raise "Could not get '#{fn}' shasum from #{sums_url}\nSkip this with: KERNEL_ORG_SKIP_SHA=1" unless m
     File.write t.name, "#{m[1]}\n"
   end
   dl.enhance [t.name]
