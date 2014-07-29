@@ -48,8 +48,53 @@ package :issue106 do
 echo "     Work around rpi-update issue #106"
 find "${FW_REPOLOCAL}/modules" -mindepth 1 -maxdepth 1 -type d | while read DIR; do
 	BASEDIR=$(basename "${DIR}")
+	echo "     rm -rf ${FW_MODPATH}/${BASEDIR}/kernel"
 	rm -rf "${FW_MODPATH}/${BASEDIR}/kernel"
 done
+
+END
+  end
+end
+
+# VideoCore bootloader
+package :vcboot do
+  target :build do
+    cp workdir('linux/arch/arm/boot/zImage'), workdir('out/kernel.img')
+  end
+end
+
+package :vcboot_dt => :vcboot do
+  target :build do
+    dst = workdir 'out'
+    ksrc = workdir 'linux'
+    sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
+  end
+
+  target :kbuild do
+
+    post_install <<END
+
+src=${BOOT_PATH}/config.txt
+dst=${src}.$(date +%Y-%m-%d--%H-%M-%S)
+
+if grep -q "^device_tree=bcm2708-rpi-b.dtb" ${src}; then
+  echo "     ${src}: DT is already enabled"
+else
+  echo "     Backup ${src} -> ${dst}"
+  cp -a ${src} ${dst}
+  echo "     Adding Device Tree options to ${src}"
+  cat <<EOM >> ${src}
+
+# Boot a Device Tree enabled kernel
+device_tree=bcm2708-rpi-b.dtb
+device_tree_address=0x100
+kernel_address=0x8000
+disable_commandline_tags=2
+EOM
+  echo
+  echo "     Remember to restore/edit ${src} when installing a non-DT kernel"
+  echo
+fi
 
 END
   end

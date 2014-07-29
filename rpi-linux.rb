@@ -2,13 +2,6 @@ require 'stdlib/base'
 
 package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vcboot, :raspberrypi_linux]
 
-# VideoCore bootloader
-package :vcboot do
-  target :build do
-		cp_r workdir('linux/arch/arm/boot/Image'), workdir('out/kernel.img')
-  end
-end
-
 def raspberrypi_linux_latest
   cmd = "git ls-remote -h https://github.com/raspberrypi/linux"
   s = `#{cmd}`
@@ -66,13 +59,13 @@ package :raspberrypi_linux do
     ksrc = workdir 'linux'
     msrc = workdir 'modules'
 
-		mkdir_p(dst + "/modules")
+    mkdir_p(dst + "/modules")
     sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/" unless FileList["#{msrc}/lib/modules/*"].empty?
     sh "cp -r #{msrc}/lib/firmware #{dst}/" unless FileList["#{msrc}/lib/firmware/*"].empty?
-		cp_r(ksrc + "/Module.symvers", dst)
+    cp_r(ksrc + "/Module.symvers", dst)
     File.open("#{dst}/git_hash", 'w') { |file| file.write(VAR['RASPBERRYPI_LINUX_REF']) }
-		mkdir_p(dst + "/extra")
-		cp_r(ksrc + "/System.map", dst + "/extra/")
-		cp_r(ksrc + "/.config", dst + "/extra/")
+    mkdir_p(dst + "/extra")
+    cp_r(ksrc + "/System.map", dst + "/extra/")
+    cp_r(ksrc + "/.config", dst + "/extra/")
   end
 end
