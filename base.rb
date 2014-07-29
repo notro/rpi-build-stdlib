@@ -1,7 +1,7 @@
 # not needed when building on the Raspberry Pi
 unless rpi?
   package :raspberrypi_tools do
-    if VAR['CROSS_COMPILE']
+    if VAR['CROSS_COMPILE'] && File.exists?(File.dirname VAR['CROSS_COMPILE'])
       puts "raspberrypi_tools: CROSS_COMPILE=#{VAR['CROSS_COMPILE']}"
     else
       github_tarball 'raspberrypi/tools', 'tools', 'RASPBERRYPI_TOOLS'
