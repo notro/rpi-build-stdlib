@@ -11,7 +11,7 @@ release :rpi_linux_latest => :rpi_linux_common do
   info "RASPBERRYPI_LINUX_BRANCH = #{ENV['RASPBERRYPI_LINUX_BRANCH']}"
 end
 
-release :rpi_linux_dt => [:rpi_linux_common, :vcboot_dt] do
+release :rpi_linux_dt => [:rpi_linux_common, :rpi_overlays] do
   VAR['RASPBERRYPI_LINUX_BRANCH'] ||= raspberrypi_linux_latest
   VAR.store 'RASPBERRYPI_LINUX_BRANCH'
   info "RASPBERRYPI_LINUX_BRANCH = #{VAR['RASPBERRYPI_LINUX_BRANCH']}"

@@ -59,43 +59,39 @@ end
 # VideoCore bootloader
 package :vcboot do
   target :build do
-    cp workdir('linux/arch/arm/boot/zImage'), workdir('out/kernel.img')
+    if FileList[workdir('linux/arch/arm/boot/dts/*.dtb')].empty?
+      cp workdir('linux/arch/arm/boot/zImage'), workdir('out/kernel.img')
+    else
+      VAR['MKKNLIMG'] ||= File.realpath '../../../mkimage/mkknlimg', File.dirname(cross_compile(nil))
+      sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/kernel.img')}"
+      sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
+    end
   end
 end
 
-package :vcboot_dt => :vcboot do
-  target :build do
-    dst = workdir 'out'
-    ksrc = workdir 'linux'
-    sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
+package :dtc do
+  begin
+    res = `dtc -v`
+  rescue => e
+    info "
+ERROR: is dtc (Device Tree compiler) installed?
+
+Plugin (-@) support is required and might not be available in the Debian package.
+
+This will give a working version:
+
+wget -c https://raw.githubusercontent.com/RobertCNelson/tools/master/pkgs/dtc.sh
+chmod +x dtc.sh
+./dtc.sh
+
+"
+    raise
   end
-
-  target :kbuild do
-
-    post_install <<END
-
-src=${BOOT_PATH}/config.txt
-dst=${src}.$(date +%Y-%m-%d--%H-%M-%S)
-
-if grep -q "^device_tree=bcm2708-rpi-b.dtb" ${src}; then
-  echo "     ${src}: DT is already enabled"
-else
-  echo "     Backup ${src} -> ${dst}"
-  cp -a ${src} ${dst}
-  echo "     Adding Device Tree options to ${src}"
-  cat <<EOM >> ${src}
-
-# Boot a Device Tree enabled kernel
-device_tree=bcm2708-rpi-b.dtb
-device_tree_address=0x100
-kernel_address=0x8000
-disable_commandline_tags=2
-EOM
-  echo
-  echo "     Remember to restore/edit ${src} when installing a non-DT kernel"
-  echo
-fi
-
-END
+  res = `dtc -@ -h 2>&1`
+  if $?.exitstatus != 0
+    if res.include? 'unknown option'
+      raise "ERROR: dtc doesn't support -@ (#{`dtc -v 2>&1`.strip})"
+    end
+    raise "ERROR: failed to run dtc (#{$?.exitstatus})"
   end
 end

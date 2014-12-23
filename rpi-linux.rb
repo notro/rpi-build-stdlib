@@ -69,3 +69,22 @@ package :raspberrypi_linux do
     cp_r(ksrc + "/.config", dst + "/extra/")
   end
 end
+
+package :rpi_overlays => [:dtc] do
+  target :kmodules do
+    fl = FileList["#{workdir('linux/arch/arm/boot/dts/*overlay.dts')}"]
+    unless fl.empty?
+      mkdir_p workdir('overlays')
+      cp fl, workdir('overlays')
+    end
+  end
+
+  target :build do
+    fl = FileList["#{workdir('overlays/*.dts')}"]
+    mkdir_p workdir('out/overlays') unless fl.empty?
+    fl.each do |f|
+      dtb = File.join workdir('out/overlays'), File.basename(f, '.dts') + '.dtb'
+      sh "dtc -@ -I dts -O dtb -o #{dtb} #{f}"
+    end
+  end
+end
