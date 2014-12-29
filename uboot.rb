@@ -3,7 +3,7 @@ package :uboot_arm do
   gitweb_tarball 'http://git.denx.de/?p=u-boot/u-boot-arm.git', 'u-boot', 'UBOOT'
 
   target :kbuild do
-    sh "cd #{workdir 'u-boot'} && #{cross_compile} ./MAKEALL --continue rpi_b"
+    sh "cd #{workdir 'u-boot'} && #{cross_compile} ./MAKEALL --continue rpi"
   end
 
   target :build do
