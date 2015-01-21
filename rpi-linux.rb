@@ -1,6 +1,6 @@
 require 'stdlib/base'
 
-package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vcboot, :raspberrypi_linux]
+package :rpi_linux_common => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :vcboot, :raspberrypi_linux, :rpi_overlays]
 
 def raspberrypi_linux_latest
   cmd = "git ls-remote -h https://github.com/raspberrypi/linux"
