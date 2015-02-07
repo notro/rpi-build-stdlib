@@ -62,23 +62,18 @@ package :raspberrypi_linux do
     mkdir_p(dst + "/modules")
     sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/" unless FileList["#{msrc}/lib/modules/*"].empty?
     sh "cp -r #{msrc}/lib/firmware #{dst}/" unless FileList["#{msrc}/lib/firmware/*"].empty?
-    cp_r(ksrc + "/Module.symvers", dst)
+    cp_r(ksrc + "/Module.symvers", dst + '/' + (rpi_kernel7? ? 'Module7.symvers' : ''))
     File.open("#{dst}/git_hash", 'w') { |file| file.write(VAR['RASPBERRYPI_LINUX_REF']) }
     mkdir_p(dst + "/extra")
-    cp_r(ksrc + "/System.map", dst + "/extra/")
-    cp_r(ksrc + "/.config", dst + "/extra/")
+    cp_r(ksrc + "/System.map", dst + "/extra/" + '/' + (rpi_kernel7? ? 'System7.map' : ''))
+    cp_r(ksrc + "/.config", dst + "/extra/" + '/' + (rpi_kernel7? ? '.config7' : ''))
+    if rpi_kernel7?
+      mv "#{dst}/extra/version", "#{dst}/extra/version7"
+    end
   end
 end
 
 package :rpi_overlays => [:dtc] do
-  target :kmodules do
-    fl = FileList["#{workdir('linux/arch/arm/boot/dts/*overlay.dts')}"]
-    unless fl.empty?
-      mkdir_p workdir('overlays')
-      cp fl, workdir('overlays')
-    end
-  end
-
   target :build do
     fl = FileList["#{workdir('overlays/*.dts')}"]
     mkdir_p workdir('out/overlays') unless fl.empty?

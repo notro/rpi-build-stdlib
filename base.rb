@@ -18,8 +18,9 @@ package :raspberrypi_firmware do |t|
     src = workdir 'firmware'
     dst = workdir 'out'
 
-		# Using FileList gives a hard to read output with all the files listed on the command line
-    sh "cp -r #{src}/boot/* #{dst}/"
+    fl = Rake::FileList["#{src}/boot/*.bin", "#{src}/boot/*.dat", "#{src}/boot/*.elf",
+                        "#{src}/boot/COPYING*", "#{src}/boot/LICENCE*"]
+    cp fl, "#{dst}/"
 
     mkdir_p(dst + "/vc/sdk/opt/vc")
 		cp_r(src + "/opt/vc/include/", dst + "/vc/sdk/opt/vc/")
@@ -56,6 +57,15 @@ END
   end
 end
 
+def rpi_kernel7?
+  `grep 'CONFIG_LOCALVERSION="-v7"' #{workdir('linux/.config')}`
+  if $?.exitstatus == 0
+    true
+  else
+    false
+  end
+end
+
 # VideoCore bootloader
 package :vcboot do
   target :build do
@@ -63,8 +73,15 @@ package :vcboot do
       cp workdir('linux/arch/arm/boot/zImage'), workdir('out/kernel.img')
     else
       VAR['MKKNLIMG'] ||= File.realpath '../../../mkimage/mkknlimg', File.dirname(cross_compile(nil))
-      sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/kernel.img')}"
+      if rpi_kernel7?
+        imgname = 'kernel7.img'
+      else
+        imgname = 'kernel.img'
+      end
+      sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
       sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
+      mkdir_p workdir('out/overlays')
+      sh "mv #{workdir('out/*overlay.dtb')} #{workdir('out/overlays/')}"
     end
   end
 end
