@@ -42,21 +42,6 @@ package :raspberrypi_firmware do |t|
   end
 end
 
-# https://github.com/Hexxeh/rpi-update/issues/106
-package :issue106 do
-  target :kbuild do
-		pre_install <<END
-echo "     Work around rpi-update issue #106"
-find "${FW_REPOLOCAL}/modules" -mindepth 1 -maxdepth 1 -type d | while read DIR; do
-	BASEDIR=$(basename "${DIR}")
-	echo "     rm -rf ${FW_MODPATH}/${BASEDIR}/kernel"
-	rm -rf "${FW_MODPATH}/${BASEDIR}/kernel"
-done
-
-END
-  end
-end
-
 def rpi_kernel7?
   `grep 'CONFIG_LOCALVERSION="-v7"' #{workdir('linux/.config')}`
   if $?.exitstatus == 0

@@ -11,7 +11,7 @@ release :rpi_linux_latest => :rpi_linux_common do
   info "RASPBERRYPI_LINUX_BRANCH = #{ENV['RASPBERRYPI_LINUX_BRANCH']}"
 end
 
-release :linux => [:issue106, :raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2835, :kernelorg_linux] do
+release :linux => [:raspberrypi_tools, :raspberrypi_firmware, :uboot_bcm2835, :kernelorg_linux] do
   VAR['KERNEL_ORG_VERSION'] ||= kernelorg_linux_latest
   VAR.store 'KERNEL_ORG_VERSION'
   info "KERNEL_ORG_VERSION = #{VAR['KERNEL_ORG_VERSION']}"
