@@ -61,7 +61,6 @@ package :raspberrypi_linux do
 
     mkdir_p(dst + "/modules")
     sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/" unless FileList["#{msrc}/lib/modules/*"].empty?
-    sh "cp -r #{msrc}/lib/firmware #{dst}/" unless FileList["#{msrc}/lib/firmware/*"].empty?
     cp_r(ksrc + "/Module.symvers", dst + '/' + (rpi_kernel7? ? 'Module7.symvers' : ''))
     File.open("#{dst}/git_hash", 'w') { |file| file.write(VAR['RASPBERRYPI_LINUX_REF']) }
     mkdir_p(dst + "/extra")
