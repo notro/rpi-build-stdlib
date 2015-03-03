@@ -54,14 +54,16 @@ end
 # VideoCore bootloader
 package :vcboot do
   target :build do
+    VAR['KERNEL_IMG'] ||= 'kernel.img'
+    VAR['KERNEL7_IMG'] ||= 'kernel7.img'
     if FileList[workdir('linux/arch/arm/boot/dts/*.dtb')].empty?
-      cp workdir('linux/arch/arm/boot/zImage'), workdir('out/kernel.img')
+      cp workdir('linux/arch/arm/boot/zImage'), workdir('out/#{VAR['KERNEL_IMG']}')
     else
       VAR['MKKNLIMG'] ||= File.realpath '../../../mkimage/mkknlimg', File.dirname(cross_compile(nil))
       if rpi_kernel7?
-        imgname = 'kernel7.img'
+        imgname = VAR['KERNEL7_IMG']
       else
-        imgname = 'kernel.img'
+        imgname = VAR['KERNEL_IMG']
       end
       sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
       sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
