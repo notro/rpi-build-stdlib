@@ -57,7 +57,7 @@ package :vcboot do
     VAR['KERNEL_IMG'] ||= 'kernel.img'
     VAR['KERNEL7_IMG'] ||= 'kernel7.img'
     if FileList[workdir('linux/arch/arm/boot/dts/*.dtb')].empty?
-      cp workdir('linux/arch/arm/boot/zImage'), workdir('out/#{VAR['KERNEL_IMG']}')
+      cp workdir('linux/arch/arm/boot/zImage'), workdir("out/#{VAR['KERNEL_IMG']}")
     else
       VAR['MKKNLIMG'] ||= File.realpath '../../../mkimage/mkknlimg', File.dirname(cross_compile(nil))
       if rpi_kernel7?
