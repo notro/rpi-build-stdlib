@@ -14,11 +14,12 @@ end
 package :kernelorg_linux do
   raise "missing environment variable KERNEL_ORG_VERSION" unless VAR['KERNEL_ORG_VERSION']
   fn = "linux-#{VAR['KERNEL_ORG_VERSION']}.tar.xz"
-  dl = download "https://www.kernel.org/pub/linux/kernel/v3.x/#{fn}", fn, fn
+  major = VAR['KERNEL_ORG_VERSION'].split('.')[0]
+  dl = download "https://www.kernel.org/pub/linux/kernel/v#{major}.x/#{fn}", fn, fn
 
   t = file download_dir("#{fn}.sha") do |t|
     next if VAR['KERNEL_ORG_SKIP_SHA'] == '1'
-    sums_url = "https://www.kernel.org/pub/linux/kernel/v3.x/sha256sums.asc"
+    sums_url = "https://www.kernel.org/pub/linux/kernel/v#{major}.x/sha256sums.asc"
     info "Create #{t.name} from #{sums_url}"
     sums = http_get sums_url
     m = sums.match(/([0-9a-f]+ .#{fn})/)
