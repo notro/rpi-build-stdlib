@@ -65,10 +65,10 @@ package :vcboot do
       else
         imgname = VAR['KERNEL_IMG']
       end
-      sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
+      sh "#{VAR['MKKNLIMG']} --dtok #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
       sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
       mkdir_p workdir('out/overlays')
-      sh "mv #{workdir('out/*overlay.dtb')} #{workdir('out/overlays/')}"
+      sh "mv #{workdir('out/*overlay.dtb')} #{workdir('out/overlays/')}" unless FileList[workdir('out/*overlay.dtb')].empty?
     end
   end
 end
