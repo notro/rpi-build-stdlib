@@ -59,13 +59,20 @@ package :vcboot do
     if FileList[workdir('linux/arch/arm/boot/dts/*.dtb')].empty?
       cp workdir('linux/arch/arm/boot/zImage'), workdir("out/#{VAR['KERNEL_IMG']}")
     else
-      VAR['MKKNLIMG'] ||= File.realpath '../../../mkimage/mkknlimg', File.dirname(cross_compile(nil))
+      unless VAR['MKKNLIMG']
+        fn = workdir('linux/scripts/mkknlimg')
+        if File.exists? fn
+          VAR['MKKNLIMG'] = fn
+        else
+          VAR['MKKNLIMG'] = File.realpath '../../../mkimage/mkknlimg', File.dirname(cross_compile(nil))
+        end
+      end
       if rpi_kernel7?
         imgname = VAR['KERNEL7_IMG']
       else
         imgname = VAR['KERNEL_IMG']
       end
-      sh "#{VAR['MKKNLIMG']} --dtok #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
+      sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
       sh "cp #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
       mkdir_p workdir('out/overlays')
       sh "mv #{workdir('out/*overlay.dtb')} #{workdir('out/overlays/')}" unless FileList[workdir('out/*overlay.dtb')].empty?
