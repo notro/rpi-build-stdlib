@@ -74,7 +74,7 @@ end
 
 package :rpi_overlays => [:dtc] do
   target :build do
-    fl = FileList["#{workdir('overlays/*.dts')}"]
+    fl = FileList["#{Rake.application.original_dir}/overlays/*.dts"] + FileList["#{workdir('overlays/*.dts')}"]
     mkdir_p workdir('out/overlays') unless fl.empty?
     fl.each do |f|
       dtb = File.join workdir('out/overlays'), File.basename(f, '.dts') + '.dtb'
