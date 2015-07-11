@@ -74,9 +74,11 @@ package :vcboot do
       end
       sh "#{VAR['MKKNLIMG']} #{workdir('linux/arch/arm/boot/zImage')} #{workdir('out/')}#{imgname}"
       sh "cp -v #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
-      sh "mkdir -p #{workdir('out/overlays')}"
-      sh "cp -v #{workdir('linux/arch/arm/boot/dts/overlays/*.dtb')} #{workdir('out/overlays')}"
-      sh "cp #{workdir('linux/arch/arm/boot/dts/overlays/README')} #{workdir('out/overlays')}"
+      if Dir.exist? workdir('linux/arch/arm/boot/dts/overlays/')
+        sh "mkdir -p #{workdir('out/overlays')}"
+        sh "cp -v #{workdir('linux/arch/arm/boot/dts/overlays/*.dtb')} #{workdir('out/overlays')}"
+        sh "cp #{workdir('linux/arch/arm/boot/dts/overlays/README')} #{workdir('out/overlays')}"
+      end
     end
   end
 end
