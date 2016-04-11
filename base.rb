@@ -76,7 +76,7 @@ package :vcboot do
       sh "cp -v #{workdir('linux/arch/arm/boot/dts/*.dtb')} #{workdir('out')}"
       if Dir.exist? workdir('linux/arch/arm/boot/dts/overlays/')
         sh "mkdir -p #{workdir('out/overlays')}"
-        sh "cp -v #{workdir('linux/arch/arm/boot/dts/overlays/*.dtb')} #{workdir('out/overlays')}"
+        sh "cp -v #{workdir('linux/arch/arm/boot/dts/overlays/*.dtb*')} #{workdir('out/overlays')}"
         sh "cp #{workdir('linux/arch/arm/boot/dts/overlays/README')} #{workdir('out/overlays')}"
       end
     end
