@@ -1,6 +1,7 @@
 require 'stdlib/base'
 
 package :rpi_linux_common => [:raspberrypi_tools, :raspberrypi_firmware, :vcboot, :raspberrypi_linux, :rpi_overlays]
+package :rpi_linux_local => [:raspberrypi_tools, :raspberrypi_firmware, :vcboot, :raspberrypi_linux_local, :rpi_overlays]
 
 def raspberrypi_linux_latest
   cmd = "git ls-remote -h https://github.com/raspberrypi/linux"
@@ -70,6 +71,37 @@ package :raspberrypi_linux do
       mv "#{dst}/extra/version", "#{dst}/extra/version7"
     end
   end
+end
+
+package :raspberrypi_linux_local do
+
+  ENV['LINUX_DEFCONFIG'] ||= 'bcmrpi_defconfig'
+
+  target :unpack do
+    sh "cd #{workdir()} && ln -s ../linux linux"
+    info "\nGit branch: #{Git.new(workdir('linux')).branch}\n"
+    sh "cd #{workdir('linux')} && ARCH=arm make distclean"
+  end
+
+  target :build do
+    dst = workdir 'out'
+    ksrc = workdir 'linux'
+    msrc = workdir 'modules'
+
+    mkdir_p(dst + "/modules")
+    sh "cp -r #{msrc}/lib/modules/* #{dst}/modules/" unless FileList["#{msrc}/lib/modules/*"].empty?
+    cp_r(ksrc + "/Module.symvers", dst + '/' + (rpi_kernel7? ? 'Module7.symvers' : ''))
+    if VAR['RASPBERRYPI_LINUX_REF']
+      File.open("#{dst}/git_hash", 'w') { |file| file.write(VAR['RASPBERRYPI_LINUX_REF']) }
+    end
+    mkdir_p(dst + "/extra")
+    cp_r(ksrc + "/System.map", dst + "/extra/" + '/' + (rpi_kernel7? ? 'System7.map' : ''))
+    cp_r(ksrc + "/.config", dst + "/extra/" + '/' + (rpi_kernel7? ? '.config7' : ''))
+    if rpi_kernel7?
+      mv "#{dst}/extra/version", "#{dst}/extra/version7"
+    end
+  end
+
 end
 
 package :rpi_overlays => [:dtc] do
